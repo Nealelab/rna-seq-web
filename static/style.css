@@ -1,0 +1,177 @@
+/* purple rgb(198,120,221) */
+/* orange rgb(209,154,102) */
+/* red rgb(224,108,117) */
+/* green rgb(152,195,121) */
+/* blue rgb(97,175,239) */
+/* cyan rgb(86,182,194) */
+/* lightgray rgb(171,178,191) */
+/* gray rgb(92,99,112) */
+/* darkgray rgb(40,44,52) */
+
+/* override */
+
+.rt-thead .rt-resizable-header-content {
+    text-align: left;
+}
+
+.pagination-bottom {
+    display: none;
+}
+
+.ReactTable .rt-td {
+    padding: 3px 3px;
+    white-space: normal;
+}
+
+.ReactTable .rt-thead.-header {
+    box-shadow: unset;
+}
+
+.ReactTable.-striped .rt-tr.-odd {
+    background: rgba(0,0,0,0.02);
+}
+
+/* */
+
+* {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    line-height: 1.4em;
+    height: 100%;
+}
+
+h2 {
+    font-weight: 700;
+}
+
+p {
+    padding-bottom: 1.5em;
+}
+
+.centeredcontent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0px 0px 0px 10px;
+    flex-basis: 80%;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 0px 0px 0px 10px;
+    flex-basis: 80%;
+}
+
+.geneinfo {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    flex-basis: 80%;
+    margin-left: 10px;
+}
+
+.tableheading {
+    font-weight: 700;
+    margin: 10px 0;
+}
+
+.sharp {
+    border-radius: 0px;
+    background-color: #f7f7f7;
+}
+
+.button {
+    border: 1px solid #bbbbbb;
+}
+
+.sharp:focus {
+    outline: none !important;
+    border:1px solid rgb(97,175,239);
+    box-shadow: 0 0 5px #aaaaaa;
+}
+
+.menuitem {
+    color: #ffffff;
+    margin-right: 30px;
+}
+
+.menuitem a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.menuitem a:hover {
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+/* network */
+
+.networksvg {
+    cursor: grab;
+    cursor: -webkit-grab;
+}
+
+.network-nodes {
+    cursor: pointer;
+}
+
+.network-nodes text {
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.d3tooltip {
+    position: absolute;
+    text-align: center;
+    width: 120px;
+    height: 50px;
+    pointer-events: none;
+    background-color: white;
+}
+
+/* matrix */
+
+text.active {
+  font-weight: 700
+}
+
+text.highlight {
+  font-weight: 700;
+}
+
+rect.active {
+  stroke: #bbbbbb;
+}
+
+/* pathway tree */
+
+.node rect {
+  cursor: pointer;
+  fill: #fff;
+  fill-opacity: 0.5;
+  stroke: rgb(97,175,239);
+  stroke-width: 0.5px;
+}
+
+.node text {
+  pointer-events: none;
+}
+
+.link {
+  fill: none;
+  opacity: 0.4;
+  stroke: rgb(97,175,239);
+  stroke-width: 1.5px;
+}

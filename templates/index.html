@@ -1,0 +1,20 @@
+<!doctype html>
+<html itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  <title>GEB</title>
+  <head>
+    <meta content="Explore gene expression patterns in the human brain across isoforms and cell types." name="description">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='reset.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='react-tabs.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='react-table.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+  </head>
+
+  <body>
+    <div id="reactEntry" style="height: 100%;"></div>
+    <script type="text/javascript" src="{{ url_for('static', filename='bundle.js') }}"></script>
+  </body>
+
+</html>
