@@ -1,23 +1,24 @@
+port = 8000
+
 requests = {
     'max_genes_per_query': 5000
 }
 
-data_dir = '/Users/jkarjala/Projects/RNAseq/Network/' # files from this directory can be sent out
+data_dir = '/mnt/data/network/' # files from this directory can be sent out
 
 data = {
 
     'sample_file': data_dir + '/4040-samples-pc1LT-0.0137.txt',
     'gene_file': data_dir + '/37289-genes.txt',
     'expression_file': data_dir + '/4040-samples-log2tpm.npz',
-    'network_file': data_dir + '/4040-samples-log2tpm-corrected-network.npz',
-    #'pc_file': data_dir + '/4577-samples-log2-corrected-pca-center-rows-TRUE-scale-rows-TRUE-center-cols-TRUE-scale-cols-TRUE-10pcs-genes.txt',
+    'network_file': data_dir + '/4040-samples-log2tpm-corrected-onebyone-centered-network.npz',
 
     'gtf_matrix_file': data_dir + '/gencode.v28.annotation.gtf.matrix.txt.gz',
-    'gwas_catalog_file': '/Users/jkarjala/Downloads/gwas_catalog_v1.0.2-associations_e92_r2018-06-25.tsv.gz',
+    'gwas_catalog_file': data_dir + '/gwas_catalog_v1.0.2-associations_e92_r2018-06-25.tsv.gz',
 
     'pathways': {
         'reactome': {
-            'json': 'Pathways/ReactomePathways-NeuronalSystem.json'
+            'json': 'ReactomePathways-NeuronalSystem.json'
         }
     },
 

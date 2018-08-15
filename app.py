@@ -61,7 +61,8 @@ def get_gwas_network():
 
 @app.route('/api/reactome')
 def get_reactome():
+    print("reactome")
     return send_from_directory(config.data_dir, config.data['pathways']['reactome']['json'])
 
 if __name__ == '__main__':
-    app.run(threaded=True, debug=True, host='0.0.0.0')
+    app.run(threaded=True, debug=False, host='0.0.0.0', port=config.port)
