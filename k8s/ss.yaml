@@ -1,0 +1,33 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: rna-seq-web-backend
+  labels:
+    app: rna-seq-web
+    tier: backend
+spec:
+  serviceName: rna-seq-web-backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rna-seq-web
+        tier: backend
+    spec:
+      containers:
+      - name: rna-seq-web-container
+        image: gcr.io/daly-lab/rnaseq-web:r1-1
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - mountPath: /mnt/data
+          name: rna-seq-web-pv
+  volumeClaimTemplates:
+  - metadata:
+      name: rna-seq-web-pv
+    spec:
+      storageClassName: ""
+      accessModes: [ ReadWriteOnce ]
+      resources:
+        requests:
+          storage: 200Gi
