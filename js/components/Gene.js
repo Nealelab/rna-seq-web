@@ -119,7 +119,7 @@ class Gene extends React.Component {
             <div>{this.state.myGene ? this.state.myGene.name : ''}</div>
             <br/>
             <div style={{display: 'flex', flexFlow: 'row nowrap', justifyContent: 'flex-start'}}>
-            <div>
+            <div style={{minWidth: '170px'}}>
             <div>{this.state.gene.gene_type.replace(/_/g, ' ')}</div>
             <div>{this.state.gene.seqname}</div>
             <div>{numberWithCommas(this.state.gene.end - this.state.gene.start)} bases</div>

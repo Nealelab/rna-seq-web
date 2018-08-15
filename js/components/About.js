@@ -15,7 +15,7 @@ class About extends React.Component {
     render() {
         return (
             <div style={{padding: '0 10px'}}>
-            <h2>Tool with no name</h2>
+            <h2>Brain Network</h2>
             <br/>
 
             <p>

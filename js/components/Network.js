@@ -35,7 +35,13 @@ class Network extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.match.params.gwas &&
+        if (nextProps.match.params.query &&
+            (this.props.match.params.query !== nextProps.match.params.query)) {
+            this.setState({
+                loading: 'loading'
+            })
+            this.loadNetwork(nextProps.match.params.query)
+        } else if (nextProps.match.params.gwas &&
             (this.props.match.params.gwas !== nextProps.match.params.gwas) ||
             (this.props.match.params.mlogp !== nextProps.match.params.mlogp) ||
             (this.props.match.params.exactTrait !== nextProps.match.params.exactTrait)) {
@@ -43,19 +49,15 @@ class Network extends React.Component {
                 loading: 'loading'
             })
             this.loadGWASGenes(nextProps.match.params.gwas, nextProps.match.params.mlogp, nextProps.match.params.exactTrait)
-        } else if (nextProps.match.params.query &&
-            (this.props.match.params.query !== nextProps.match.params.query)) {
-            this.setState({
-                loading: 'loading'
-            })
-            this.loadNetwork(nextProps.match.params.query)
         }
     }
 
     handleServerResponse(result) {
+
         if (result.genes.length == 0) {
             return alert('no genes found! maybe you can try again?')
         }
+
         this.setState({
             genes: result.genes,
             not_found: result.not_found,
@@ -70,7 +72,7 @@ class Network extends React.Component {
                 loading: 'clustering'
             })
             // how to do this nicely?
-            // callback on setState does not work - although render sees the new state, the dom is not updated accordingly: weirdest thing ever
+            // callback on setState does not work - although render sees the new state, the dom is not updated accordingly: weird
             setTimeout(() => {
                 var network = convertNetworkForD3(result, config.network.links.threshold, false)
                 if (network.elements.nodes.length > 5) {
@@ -201,8 +203,17 @@ class Network extends React.Component {
 
         if (this.state.loading) return <div className="centeredcontent">{this.state.loading}</div>
 
+        const topContent = this.state.selectedTab == 0 ?
+        <div style={{alignSelf: 'flex-start', paddingTop: '30px'}}>
+        {this.state.traits.length > 0 ? this.state.traits.join(' / ') : this.state.genes.length + ' genes in the network, ' + this.state.not_found.length + ' genes not found'}
+        </div> :
+        <div style={{alignSelf: 'flex-start', paddingTop: '11px'}}>
+        {this.state.traits.length > 0 ? this.state.traits.join(' / ') : this.state.genes.length + ' genes in the network, ' + this.state.not_found.length + ' genes not found'}
+        </div>
+
         return (
             <div className="centeredcontent">
+            {topContent}
             <Tabs forceRenderTabPanel={true} defaultIndex={this.state.selectedTab} onSelect={this.onTabSelect} style={{height: '100%', width: '100%'}}>
             <TabList>
             <Tab>Network</Tab>

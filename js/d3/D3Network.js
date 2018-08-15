@@ -60,7 +60,7 @@ D3Network.prototype._setScales = function() {
 D3Network.prototype._setKeys = function() {
 
     //document.querySelector(`#${this._elemId}`).onkeypress = e => {
-        document.onkeypress = e => {
+    document.onkeypress = e => {
         var key = e.keyCode ? e.keyCode : e.which
         if (key == 110) { // 'n'
             this._svg
@@ -181,6 +181,11 @@ D3Network.prototype._initForce = function(network, handlers) {
         }
     })
     node.on("mouseleave", handlers.mouseleave)
+
+    node.on("click", d => {
+        var win = window.open(`/gene/${d.gene_id}`, '_blank')
+        win.focus()
+    })
 
     this._svg.on("mousemove", function() {
         var elem = document.elementFromPoint(d3.event.clientX, d3.event.clientY)
