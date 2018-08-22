@@ -77,7 +77,12 @@ D3Histogram.prototype._init = function(gene, expression) {
     g.append("text")
         .attr("transform",
               "translate(" + -this._margin.left + " ," + -this._margin.top/1.5 + ")")
-        .text(`${gene.gene_name} expression across ${numberWithCommas(expression.length)} RNA-seq runs`)
+        .text(() => {
+            var tpm = Math.pow(2, gene.avg_log2tpm) - 1
+            if (tpm < 100) tpm = tpm.toPrecision(2)
+            else tpm = Math.round(tpm)
+            return `${gene.gene_name} expression across ${numberWithCommas(expression.length)} RNA-seq runs (average log2 TPM ${tpm})`
+        })
         .style("font-weight", 700)
 
     g.append("text")

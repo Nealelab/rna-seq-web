@@ -1,9 +1,10 @@
 import numpy as np
-import pandas
+import pandas as pd
 import io
 import gzip
 import time
 import re
+import copy
 from collections import OrderedDict
 
 import config
@@ -25,12 +26,12 @@ class DataWorkshop(object):
             raise Exception('Illegal data file(s): Number of genes does not match in all files')
         if 'pc_file' in config.data and not len(self.expression) == len(self.pcs):
             raise Exception('Illegal data file(s): Number of genes does not match in pc file')
-        self.gwas_catalog = pandas.read_csv(config.data['gwas_catalog_file'], sep='\t')
+        self.gwas_catalog = pd.read_csv(config.data['gwas_catalog_file'], sep='\t')
 
     def sample_source(self, row):
         source = ''
         for column in config.data['sample_source_columns']:
-            if not pandas.isna(row[column]):
+            if not pd.isna(row[column]):
                 source = row[column]
                 break
         return source
@@ -38,7 +39,7 @@ class DataWorkshop(object):
     def sample_description(self, row):
         description = ''
         for column in config.data['sample_description_columns']:
-            if not pandas.isna(row[column]):
+            if not pd.isna(row[column]):
                 description = row[column]
                 break
         return description
@@ -67,7 +68,7 @@ class DataWorkshop(object):
 
     def load_genes(self, gene_file, gtf_matrix_file):
         print('loading genes')
-        df_genes = pandas.read_csv(gtf_matrix_file, sep='\t')
+        df_genes = pd.read_csv(gtf_matrix_file, sep='\t')
         with open(gene_file, 'r') as f:
             ensgs = [ensg.strip() for ensg in f.readlines() if ensg]
         df_genes = df_genes[df_genes['gene_id'].isin(ensgs)]
@@ -91,11 +92,11 @@ class DataWorkshop(object):
             d[gene['gene_name_upper']] = gene
         print('{} gene names map to several ensembl ids'.format(len(duplo_gene_names)))
         print('{} genes, {} gene names loaded'.format(len(df_genes), len(d)))
-        return {'df_genes': df_genes, 'dict_genenames': d, 'duplo_gene_names': duplo_gene_names}
+        return {'df_genes': df_genes, 'genelist': genelist, 'dict_genenames': d, 'duplo_gene_names': duplo_gene_names}
 
     def load_samples(self, sample_file):
         print('loading samples')
-        df_samples = pandas.read_csv(sample_file, sep='\t')
+        df_samples = pd.read_csv(sample_file, sep='\t')
         df_samples['source_combined'] = df_samples.apply(self.sample_source, axis=1)
         df_samples['description_combined'] = df_samples.apply(self.sample_description, axis=1)
         df_samples.fillna(0, inplace=True)
@@ -105,12 +106,19 @@ class DataWorkshop(object):
     def get_expression(self, rank):
         return self.expression[rank].tolist()
 
+    def get_coexpressed(self, rank, n):
+        ranks = self.network[rank].argsort()[-(n+1):][::-1]
+        genes = [copy.deepcopy(self.genes['genelist'][r]) for r in ranks]
+        for i, gene in enumerate(genes):
+            gene['r'] = round(float(self.network[rank][ranks[i]]), 3)
+        return genes[1:]
+
     def get_subnetwork(self, ranks):
         subnetwork = []
         for i, rank in enumerate(ranks):
             j = i + 1
             while j < len(ranks):
-                subnetwork.append(float(self.network[rank][ranks[j]]))
+                subnetwork.append(round(float(self.network[rank][ranks[j]]), 3))
                 j = j + 1
         return subnetwork
 

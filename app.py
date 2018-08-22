@@ -29,8 +29,18 @@ def get_gene(query):
     if gene is not None:
         gene = copy.deepcopy(gene)
         gene['expression'] = dws.get_expression(gene['rank'])
+        cox = dws.get_coexpressed(gene['rank'], config.data['num_coexpressed_genes'])
         samples = dws.get_samples(gene['rank'])
-        return jsonify({'gene': gene, 'samples': samples})
+        return jsonify({'gene': gene, 'coexpressed': cox, 'samples': samples})
+    else:
+        return Response('expression for {} not found'.format(query), status=404, mimetype='text/plain')
+
+@app.route('/api/coexpression/<query>')
+def get_coexpressed_genes(query):
+    gene = dws.query_one_gene(query)
+    if gene is not None:
+        genes = dws.get_coexpressed(gene['rank'], config.data['num_coexpressed_genes'])
+        return jsonify(genes)
     else:
         return Response('expression for {} not found'.format(query), status=404, mimetype='text/plain')
 

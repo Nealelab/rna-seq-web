@@ -183,7 +183,7 @@ D3Network.prototype._initForce = function(network, handlers) {
     node.on("mouseleave", handlers.mouseleave)
 
     node.on("click", d => {
-        var win = window.open(`/gene/${d.gene_id}`, '_blank')
+        var win = window.open(`/gene/${d.gene_name}`, '_blank')
         win.focus()
     })
 

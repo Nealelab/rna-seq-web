@@ -40,5 +40,7 @@ data = {
     'ARRAYEXPRESS_COMMENT[SAMPLE_CHARACTERISTICS]'],
 
     'num_top_samples': 100,
-    'gwas_gene_type': 'reported'
+    'gwas_gene_type': 'reported',
+
+    'num_coexpressed_genes': 100
 }

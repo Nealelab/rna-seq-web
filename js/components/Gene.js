@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import ReactTable from 'react-table'
 import D3Histogram from '../d3/D3HistogramGeneInfo'
 import config from '../config'
@@ -13,7 +14,27 @@ class Gene extends React.Component {
             samples: [],
             myGene: null,
             myGeneError: null,
-            columns: [{
+            coexpressedColumns: [{
+                Header: 'GENE',
+                accessor: 'gene_name',
+                Cell: props => <Link to={'/gene/' + props.value}>{props.value}</Link>,
+                width: 120
+            }, {
+                Header: 'R',
+                accessor: 'r',
+                width: 50
+            }, {
+                Header: 'AVG LOG2 TPM',
+                accessor: 'avg_log2tpm',
+                Cell: props => props.value.toPrecision(2),
+                width: 120
+            }, {
+                Header: 'TYPE',
+                accessor: 'gene_type',
+                Cell: props => props.value.replace(/_/g, ' '),
+                width: 200
+            }],
+            sampleColumns: [{
                 Header: 'RUN',
                 accessor: 'run_accession',
                 Cell: props => <a href={'https://www.ebi.ac.uk/ena/data/view/' + props.value} target='_blank'>{props.value}</a>,
@@ -56,6 +77,7 @@ class Gene extends React.Component {
     handleGeneResponse(result) {
         this.setState({
             gene: result.gene,
+            coexpressed: result.coexpressed,
             samples: result.samples
         })
         setTimeout(() => {
@@ -136,13 +158,22 @@ class Gene extends React.Component {
             </div>
             <div id='histogram' style={{flex: '1 1 500px', minHeight: '350px', width: '100%', maxWidth: '800px', margin: '20px 0'}}></div>
             <div>
+            <div className='tableheading'>Genes with highest co-expression with {this.state.gene.gene_name}</div>
+            <ReactTable
+              data={this.state.coexpressed}
+              columns={this.state.coexpressedColumns}
+              defaultPageSize={100}
+              className="-striped -highlight"
+            />
+            </div>
+            <div style={{marginTop: '20px'}}>
             <div className='tableheading'>Runs with highest expression of {this.state.gene.gene_name}</div>
-              <ReactTable
-                data={this.state.samples}
-                columns={this.state.columns}
-                defaultPageSize={100}
-                className="-striped -highlight"
-              />
+            <ReactTable
+              data={this.state.samples}
+              columns={this.state.sampleColumns}
+              defaultPageSize={100}
+              className="-striped -highlight"
+            />
             </div>
             </div>
         )
