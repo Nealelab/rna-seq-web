@@ -97,8 +97,8 @@ class DataWorkshop(object):
     def load_samples(self, sample_file):
         print('loading samples')
         df_samples = pd.read_csv(sample_file, sep='\t')
-        df_samples['source_combined'] = df_samples.apply(self.sample_source, axis=1)
-        df_samples['description_combined'] = df_samples.apply(self.sample_description, axis=1)
+        # df_samples['source_combined'] = df_samples.apply(self.sample_source, axis=1)
+        # df_samples['description_combined'] = df_samples.apply(self.sample_description, axis=1)
         df_samples.fillna(0, inplace=True)
         print('{} samples loaded'.format(len(df_samples)))
         return df_samples

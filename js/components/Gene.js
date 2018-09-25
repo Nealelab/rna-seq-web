@@ -57,12 +57,18 @@ class Gene extends React.Component {
             }, {
                 Header: 'DESCRIPTION',
                 accessor: 'description_combined'
-            }]
+            }],
+            value: 'cohort'
         }
         this.handleGeneResponse = this.handleGeneResponse.bind(this)
         this.loadGene = this.loadGene.bind(this)
         this.getMyGene = this.getMyGene.bind(this)
         this.loadGene(props.match.params.query)
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(event) {
+        this.updateViolin(event.target.value)
     }
 
     handleGeneResponse(result) {
@@ -80,12 +86,16 @@ class Gene extends React.Component {
             this.setState({
                 histogram: new D3Histogram('histogram', this.state.gene)
             })
-            var cat = "disease"
-            if (result.samples.length > 0 && Object.keys(result.samples[1]).includes(cat)) {
-                var s = result.samples.map(a => a[cat])
-                this.plotViolin(s, result.gene.expression, "violin")
-            }
+            var cat = this.state.value
+            this.updateViolin(cat)
         }, 10)
+    }
+
+    updateViolin(cat) {
+        if (this.state.samples.length > 0 && Object.keys(this.state.samples[1]).includes(cat)) {
+            var s = this.state.samples.map(a => a[cat])
+            this.plotViolin(s, this.state.gene.expression, "violin")
+        }    
     }
 
     plotViolin(x, y, id) {
@@ -167,6 +177,9 @@ class Gene extends React.Component {
             </div>
             <div id='histogram' style={{flex: '1 1 500px', minHeight: '350px', width: '100%', maxWidth: '800px', margin: '20px 0'}}></div>
             <div className='tableheading'>Expression per class</div>
+            <div style={{width: '200px'}}>
+            <select onChange={this.handleChange}>{Object.keys(this.state.samples[1]).filter(e => e !== 'ID').map((x) => <option key={x}>{x}</option>)}</select>
+            </div>
             <div id='violin'></div>
             <div>
             
