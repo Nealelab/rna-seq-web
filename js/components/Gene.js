@@ -4,6 +4,7 @@ import ReactTable from 'react-table'
 import D3Histogram from '../d3/D3HistogramGeneInfo'
 import config from '../config'
 import { numberWithCommas } from '../util/utility'
+import Plotly from 'plotly.js-dist';
 
 class Gene extends React.Component {
 
@@ -50,22 +51,12 @@ class Gene extends React.Component {
                 },
                 width: 50
             }, {
-                Header: 'READS',
-                accessor: 'read_count',
-                Cell: props => numberWithCommas(props.value),
-                width: 90
-            }, {
                 Header: 'SOURCE',
                 accessor: 'source_combined',
                 width: 250
             }, {
                 Header: 'DESCRIPTION',
                 accessor: 'description_combined'
-            }, {
-                id: 'study',
-                Header: 'STUDY',
-                accessor: d => d,
-                Cell: props => <a href={'https://www.ebi.ac.uk/ena/data/view/' + props.original.study_accession} target='_blank'>{props.original.study_title}</a>
             }]
         }
         this.handleGeneResponse = this.handleGeneResponse.bind(this)
@@ -80,6 +71,7 @@ class Gene extends React.Component {
             coexpressed: result.coexpressed,
             samples: result.samples
         })
+
         setTimeout(() => {
             this.getMyGene()
             if (this.state.histogram) {
@@ -88,7 +80,24 @@ class Gene extends React.Component {
             this.setState({
                 histogram: new D3Histogram('histogram', this.state.gene)
             })
+            var cat = "disease"
+            if (result.samples.length > 0 && Object.keys(result.samples[1]).includes(cat)) {
+                var s = result.samples.map(a => a[cat])
+                this.plotViolin(s, result.gene.expression, "violin")
+            }
         }, 10)
+    }
+
+    plotViolin(x, y, id) {
+        var trace1 = {
+              x: x,
+              y: y,
+              type: 'violin'
+            };
+
+        var data = [trace1];
+
+        Plotly.newPlot(id, data);
     }
 
     loadGene(query) {
@@ -157,7 +166,10 @@ class Gene extends React.Component {
             <br/>
             </div>
             <div id='histogram' style={{flex: '1 1 500px', minHeight: '350px', width: '100%', maxWidth: '800px', margin: '20px 0'}}></div>
+            <div className='tableheading'>Expression per class</div>
+            <div id='violin'></div>
             <div>
+            
             <div className='tableheading'>Genes with highest co-expression with {this.state.gene.gene_name}</div>
             <ReactTable
               data={this.state.coexpressed}

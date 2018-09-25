@@ -138,6 +138,9 @@ class DataWorkshop(object):
         temp['log2tpm'] = self.expression[rank][temp.index]
         return temp.to_dict(orient='records')[::-1]
 
+    def get_samples2(self, rank):
+        return self.samples.to_dict(orient='records')
+
     def query_one_gene(self, query):
         q = query.upper()
         return self.genes['dict_genenames'][q] if q in self.genes['dict_genenames'] else None
