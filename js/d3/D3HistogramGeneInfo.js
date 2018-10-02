@@ -32,9 +32,9 @@ D3Histogram.prototype._setSize = function(elemId) {
 // https://bl.ocks.org/d3noob/96b74d0bd6d11427dd797892551a103c
 D3Histogram.prototype._init = function(gene, expression) {
 
-    // expression = expression.map(e => {
-    //     return e < config.histogram.maxLog ? e : config.histogram.maxLog
-    // })
+    expression = expression.map(e => {
+        return e < config.histogram.maxLog ? e : config.histogram.maxLog
+    })
 
     var x = d3.scaleLinear()
     .domain([0, config.histogram.maxLog + 0.5])

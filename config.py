@@ -12,6 +12,7 @@ data = {
     'gene_file': data_dir + '/37289-genes.txt',
     'expression_file': data_dir + '/4040-samples-log2tpm.npz',
     'network_file': data_dir + '/4040-samples-log2tpm-corrected-onebyone-centered-network.npz',
+    # 'pca_file': data_dir + '/pca.txt.gz',
 
     'gtf_matrix_file': data_dir + '/gencode.v28.annotation.gtf.matrix.txt.gz',
     'gwas_catalog_file': data_dir + '/gwas_catalog_v1.0.2-associations_e92_r2018-06-25.tsv.gz',
@@ -39,8 +40,9 @@ data = {
     'ARRAYEXPRESS_COMMENT[SAMPLE_DESCRIPTION]',
     'ARRAYEXPRESS_COMMENT[SAMPLE_CHARACTERISTICS]'],
 
-    'num_top_samples': 100,
+    'num_top_samples': 20,
     'gwas_gene_type': 'reported',
 
-    'num_coexpressed_genes': 100
+    'num_coexpressed_genes': 20,
+    'gut_or_brain': 'brain'
 }

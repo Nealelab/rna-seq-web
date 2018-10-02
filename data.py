@@ -16,6 +16,10 @@ class DataWorkshop(object):
         self.expression = self.load_data(config.data['expression_file'], 'expression')
         self.genes = self.load_genes(config.data['gene_file'], config.data['gtf_matrix_file'])
         self.network = self.load_data(config.data['network_file'], 'network')
+        if 'pca_file' in config.data:
+            self.pca = self.load_pca(config.data['pca_file'])
+        else:
+            self.pca = None
         if 'pc_file' in config.data:
             self.pcs = self.load_pcs(config.data['pc_file'])
         else:
@@ -43,6 +47,11 @@ class DataWorkshop(object):
                 description = row[column]
                 break
         return description
+
+    def get_pca(self):
+        if self.pca is None:
+            return None
+        return self.pca.to_dict()
 
     def load_data(self, file, name):
         print('loading {} data'.format(name))
@@ -97,11 +106,17 @@ class DataWorkshop(object):
     def load_samples(self, sample_file):
         print('loading samples')
         df_samples = pd.read_csv(sample_file, sep='\t')
-        # df_samples['source_combined'] = df_samples.apply(self.sample_source, axis=1)
-        # df_samples['description_combined'] = df_samples.apply(self.sample_description, axis=1)
+        if (config.data['gut_or_brain'] == 'brain'):
+            df_samples['source_combined'] = df_samples.apply(self.sample_source, axis=1)
+            df_samples['description_combined'] = df_samples.apply(self.sample_description, axis=1)
         df_samples.fillna(0, inplace=True)
         print('{} samples loaded'.format(len(df_samples)))
         return df_samples
+
+    def load_pca(self, file):
+        print('loading pca')
+        df_pca = pd.read_csv(file, sep='\t')
+        return df_pca
 
     def get_expression(self, rank):
         return self.expression[rank].tolist()
@@ -132,13 +147,13 @@ class DataWorkshop(object):
                 pcs[i].append(float(self.pcs[i][j]))
         return pcs
 
-    def get_samples(self, rank):
+    def get_top_samples(self, rank):
         temp = self.samples.reindex(self.expression[rank].argsort())
         temp = temp[len(temp)-config.data['num_top_samples']:].copy() # samples with highest expression
         temp['log2tpm'] = self.expression[rank][temp.index]
         return temp.to_dict(orient='records')[::-1]
 
-    def get_samples2(self, rank):
+    def get_all_samples(self, rank):
         return self.samples.to_dict(orient='records')
 
     def query_one_gene(self, query):
