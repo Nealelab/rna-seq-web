@@ -4,6 +4,7 @@ import ReactTable from 'react-table'
 import D3Histogram from '../d3/D3HistogramGeneInfo'
 import config from '../config'
 import { numberWithCommas } from '../util/utility'
+import Plotly from 'plotly.js-dist';
 
 class Gene extends React.Component {
 
@@ -14,6 +15,7 @@ class Gene extends React.Component {
             samples: [],
             myGene: null,
             myGeneError: null,
+            showViolin: config.genePage.showViolin,
             coexpressedColumns: [{
                 Header: 'GENE',
                 accessor: 'gene_name',
@@ -50,36 +52,35 @@ class Gene extends React.Component {
                 },
                 width: 50
             }, {
-                Header: 'READS',
-                accessor: 'read_count',
-                Cell: props => numberWithCommas(props.value),
-                width: 90
-            }, {
                 Header: 'SOURCE',
                 accessor: 'source_combined',
                 width: 250
             }, {
                 Header: 'DESCRIPTION',
                 accessor: 'description_combined'
-            }, {
-                id: 'study',
-                Header: 'STUDY',
-                accessor: d => d,
-                Cell: props => <a href={'https://www.ebi.ac.uk/ena/data/view/' + props.original.study_accession} target='_blank'>{props.original.study_title}</a>
-            }]
+            }],
+            value: 'cohort'
         }
         this.handleGeneResponse = this.handleGeneResponse.bind(this)
         this.loadGene = this.loadGene.bind(this)
         this.getMyGene = this.getMyGene.bind(this)
         this.loadGene(props.match.params.query)
+        this.handleChangeViolin = this.handleChangeViolin.bind(this);
+    }
+
+    handleChangeViolin(event) {
+        this.updateViolin(event.target.value)
     }
 
     handleGeneResponse(result) {
         this.setState({
             gene: result.gene,
             coexpressed: result.coexpressed,
-            samples: result.samples
+            allSamples: result.allSamples,
+            topSamples: result.topSamples,
+            pca: result.pca
         })
+
         setTimeout(() => {
             this.getMyGene()
             if (this.state.histogram) {
@@ -88,7 +89,51 @@ class Gene extends React.Component {
             this.setState({
                 histogram: new D3Histogram('histogram', this.state.gene)
             })
+            if (config.genePage.gut) {
+                this.state.sampleColumns = Object.keys(this.state.allSamples[1]).map(x => Object({Header: x, accessor: x}))
+            }
+            var cat = this.state.value
+            this.updateViolin(cat)
+            if (this.state.pca) {
+                this.updatePCA(Object.values(this.state.pca['PC1']), Object.values(this.state.pca['PC2']), this.state.gene.expression)    
+            }
         }, 10)
+    }
+
+    updateViolin(cat) {
+        if (this.state.allSamples.length > 0 && Object.keys(this.state.allSamples[1]).includes(cat)) {
+            var s = this.state.allSamples.map(a => a[cat])
+            this.plotViolin(s, this.state.gene.expression, "violin")
+        }    
+    }
+
+    updatePCA(PC1, PC2, expr, cat, id = "pca") {
+        var s = this.state.allSamples.map(a => a[cat]).map(Number)
+        var trace1 = {
+              x: PC1,
+              y: PC2,
+              mode: 'markers',
+              type: 'scatter',
+              marker: {
+                color: expr
+              }
+            };
+
+        var data = [trace1];
+
+        Plotly.newPlot(id, data);
+    }
+
+    plotViolin(x, y, id) {
+        var trace1 = {
+              x: x,
+              y: y,
+              type: 'violin'
+            };
+
+        var data = [trace1];
+
+        Plotly.newPlot(id, data);
     }
 
     loadGene(query) {
@@ -157,25 +202,36 @@ class Gene extends React.Component {
             <br/>
             </div>
             <div id='histogram' style={{flex: '1 1 500px', minHeight: '350px', width: '100%', maxWidth: '800px', margin: '20px 0'}}></div>
+            <div id='pca'></div>
+            {this.state.showViolin && (
+                <div>
+                <div className='tableheading'>Expression of {this.state.gene.gene_name} per factor</div>
+                <div style={{width: '200px'}}>
+                <select onChange={this.handleChangeViolin}>{Object.keys(this.state.allSamples[1]).filter(e => e !== 'ID').map((x) => <option key={x}>{x}</option>)}</select>
+                </div>
+                <div id='violin'></div>
+                </div>)
+            }
             <div>
+            
             <div className='tableheading'>Genes with highest co-expression with {this.state.gene.gene_name}</div>
             <ReactTable
               data={this.state.coexpressed}
               columns={this.state.coexpressedColumns}
-              defaultPageSize={100}
               className="-striped -highlight"
             />
             </div>
             <div style={{marginTop: '20px'}}>
-            <div className='tableheading'>Runs with highest expression of {this.state.gene.gene_name}</div>
+            <div className='tableheading'>Samples with highest expression of {this.state.gene.gene_name}</div>
             <ReactTable
-              data={this.state.samples}
+              data={this.state.topSamples}
               columns={this.state.sampleColumns}
-              defaultPageSize={100}
               className="-striped -highlight"
             />
             </div>
+            <br/>
             </div>
+            
         )
     }
 }

@@ -24,6 +24,7 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
+    "plotly.js-dist": "^1.41.2",
     "react": "^16.4.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^4.3.1"

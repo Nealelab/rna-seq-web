@@ -45,6 +45,11 @@ const config = {
             small: {top: 0, right: 0, left: 0, bottom: 0},
             big: {top: 30, right: 50, left: 50, bottom: 50}
         }
+    },
+
+    genePage: {
+        showViolin: false,
+        gut: false
     }
 }
 

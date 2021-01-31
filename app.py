@@ -30,8 +30,10 @@ def get_gene(query):
         gene = copy.deepcopy(gene)
         gene['expression'] = dws.get_expression(gene['rank'])
         cox = dws.get_coexpressed(gene['rank'], config.data['num_coexpressed_genes'])
-        samples = dws.get_samples(gene['rank'])
-        return jsonify({'gene': gene, 'coexpressed': cox, 'samples': samples})
+        allSamples = dws.get_all_samples(gene['rank'])
+        topSamples = dws.get_top_samples(gene['rank'])
+        pca = dws.get_pca()
+        return jsonify({'gene': gene, 'coexpressed': cox, 'allSamples': allSamples, 'topSamples': topSamples, 'pca': pca})
     else:
         return Response('expression for {} not found'.format(query), status=404, mimetype='text/plain')
 
