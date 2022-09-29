@@ -16,7 +16,7 @@
     "@babel/preset-react": "^7.0.0-beta.53",
     "affinity-propagation": "0.0.1",
     "babel-loader": "^8.0.0-beta",
-    "d3": "^5.5.0",
+    "d3": "^7.6.1",
     "react-table": "^6.8.6",
     "react-tabs": "^2.2.2",
     "webpack": "^4.42.1",
