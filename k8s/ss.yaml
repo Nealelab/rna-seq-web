@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: rna-seq-web-container
-        image: gcr.io/daly-lab/rnaseq-web:20240806
+        image: gcr.io/daly-lab/rnaseq-web:20240807
         ports:
         - containerPort: 8000
         volumeMounts:
