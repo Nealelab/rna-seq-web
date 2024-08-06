@@ -187,8 +187,8 @@ D3Network.prototype._initForce = function(network, handlers) {
         win.focus()
     })
 
-    this._svg.on("mousemove", function() {
-        var elem = document.elementFromPoint(d3.event.clientX, d3.event.clientY)
+    this._svg.on("mousemove", function(event) {
+        var elem = document.elementFromPoint(event.clientX, event.clientY)
         if (elem.tagName == 'svg') {
             this.hideTooltip()
         }
@@ -221,24 +221,24 @@ D3Network.prototype._initForce = function(network, handlers) {
     .on("zoom", zoom_actions)
     zoom_handler(this._svg)
 
-    function zoom_actions() {
-        g.attr("transform", d3.event.transform)
+    function zoom_actions(event) {
+        g.attr("transform", event.transform)
     }
 
     function dragstarted(d) {
-        if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+        if (!d.active) simulation.alphaTarget(0.3).restart();
         d.fx = d.x;
         d.fy = d.y;
         this._state.dragging = true
     }
 
     function dragged(d) {
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
+        d.fx = d.x;
+        d.fy = d.y;
     }
 
     function dragended(d) {
-        if (!d3.event.active) simulation.alphaTarget(0);
+        if (!d.active) simulation.alphaTarget(0);
         d.fx = null;
         d.fy = null;
         this._state.dragging = false
