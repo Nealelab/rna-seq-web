@@ -1,10 +1,10 @@
-FROM ubuntu:16.04
+FROM ubuntu:22.04
 
 LABEL maintainer="jkarjala@broadinstitute.org"
 
 RUN apt-get update && \
     apt-get install -y curl python3-pip && \
-    curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+    curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
     pip3 install gunicorn
 

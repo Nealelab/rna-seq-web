@@ -170,7 +170,7 @@ D3Matrix.prototype._init = function(network) {
     this._svg.on("mousemove", mousemove)
 
     function mousemove(p) {
-        var elem = document.elementFromPoint(d3.event.clientX, d3.event.clientY)
+        var elem = document.elementFromPoint(p.clientX, p.clientY)
         if (elem.tagName == 'svg') {
             tooltipDiv
             // .transition().duration(100)
@@ -187,8 +187,8 @@ D3Matrix.prototype._init = function(network) {
                 return `${network.elements.nodes[p.x].gene_name}<br/>${network.elements.nodes[p.y].gene_name}<br/>r = ${Math.round(1000 * p.z)/1000}`
             }
         })
-        .style("left", (d3.event.x - 35) + "px")
-        .style("top", (d3.event.y - 50) + "px")
+        .style("left", (p.x - 35) + "px")
+        .style("top", (p.y - 50) + "px")
         .style("opacity", 0.7)
 
         d3.selectAll(".row text").classed("active", function(d, i) { return i == p.y; });
@@ -231,8 +231,8 @@ D3Matrix.prototype._init = function(network) {
 
     //TODO
     //zoom_handler(this._svg)//.select("g"))
-    function zoom_actions() {
-        svg.attr("transform", d3.event.transform)
+    function zoom_actions(event) {
+        svg.attr("transform", event.transform)
     }
 
     d3.select("#order").on("change", function() {
