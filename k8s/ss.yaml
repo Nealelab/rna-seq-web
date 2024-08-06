@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: rna-seq-web-backend
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: rna-seq-web-container
-        image: gcr.io/daly-lab/rnaseq-web:r1-1
+        image: gcr.io/daly-lab/rnaseq-web:20240807
         ports:
         - containerPort: 8000
         volumeMounts:
